@@ -8,6 +8,8 @@ setup:
 2.create a database named sibi_forms
 
 3.then create a table name users with username and password as columns with VARCHAR datatype
+or
+run the create_userdb.py script to create the necessary database and table 
 
 4.open the terminal .cd into this webdev_delta_task3 directory
 
