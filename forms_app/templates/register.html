@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register user</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='register.css')}}">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+    </head>
+
+    <body>
+      <header>
+        <h1>Sibi Forms</h1>
+      </header>
+        <div class="nav">
+            <a href="{{url_for('login')}}" id="first">Sign in</a>
+            <a class="active" href="{{url_for('signup')}}">Sign up</a>
+        </div>
+        <form action="" method="post">
+            <div>
+             <input type="text" required value="username" name="user" id="usr">
+            </div>
+            <div>
+                <input type="text" required value="password" name="pass" oninput="myfunc(this)">
+            </div>
+            <div>
+                <input type="text" required value="confirm password" name="passc" oninput="myfunc(this)">
+            </div>
+            <div class="button">
+               <button type="submit">Sign up</button>
+            </div>
+        </form>
+        <div id="output"></div>
+        {% if msg %}
+        <p>{{msg}}</p>
+        {% endif %}
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        function myfunc(inp){
+            inp.setAttribute("type","password");
+        }
+        $(document).ready(function() {
+            $('input[name="user"]').on('change', function(event) {
+              $.ajax({
+                 data : {
+                    username : $('#usr').val(),
+                        },
+                    type : 'POST',
+                    url : '/check'
+                   })
+               .done(function(data) {
+                 $('#output').text(data.output).show();
+             });
+             event.preventDefault();
+             });
+       });
+
+    </script>
+
+</html>

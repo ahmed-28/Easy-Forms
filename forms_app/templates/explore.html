@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>explore</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='home.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </head>
+
+    <body>
+      <header>
+         <div class="nav">
+          <a href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+          <a href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+          <a class="active" href="{{url_for('explore')}}"><i class="material-icons">search</i>Explore</a>
+          <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+         </div>
+       </header>
+       {% if trend_forms %}
+       <h3>Trending forms</h3>
+        {% for tf in trend_forms %}
+        <div class="fbox">
+            <div class="forms"><div class="content">
+                {{trend_forms[tf][0]}} - form {{trend_forms[tf][1]}}</div></div>
+            <a href="{{ url_for('expform' , user=trend_forms[tf][0],formno=trend_forms[tf][1]) }} "><button>view</button></a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h3>Trending forms will be displayed as people start filling it</h3>
+        {% endif %}
+    </body>
+    <script>
+        colors=["#8198A6","#BFB38E","#D9985F","#BF7950","#D97B59"];
+        var f=document.getElementsByClassName('forms');
+        for(var i=0;i<f.length;i++){
+            var ri=Math.floor(Math.random()*5);
+            f[i].style.backgroundColor=colors[ri];
+        }
+    </script>
+
+</html>

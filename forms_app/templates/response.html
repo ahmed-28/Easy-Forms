@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <title>response</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='response.css')}}">
+    </head>
+    <body>
+        {% if msg %}
+        <h1>{{ msg }}</h1>
+        {% else %}
+        <div id="heading">
+          <label>Title:</label><p>{{data[0][0]}}</p>
+          <label>Description:</label><p>{{data[0][1]}}</p>
+        </div>
+        {% set co = namespace(a=0,r=0)%}
+        {% set q= namespace(no=0) %}
+        <form action="" method="post" name="resform" id="resform" enctype="multipart/form-data" onsubmit="checkform()">
+       
+        {% for d in data %}
+          <div class="field">
+            {% if d[7] != q.no %}
+            <div>
+           <p>{{ d[3] }}</p>
+           </div>
+           {% endif %}
+           <div>
+            {% set q.no=d[7] %}
+
+            {% if d[4]=="image" %}
+            <input name="{{'ans'+(d[7])|string}}" type="file" accept="image/*" required>
+
+            {% elif d[4]=="file" %}
+            <input name="{{'ans'+(d[7])|string}}" type="file" accept=".doc, .docx, .pdf , .txt , .ppt , .otd , .wps , audio/* , video/*" required>
+
+            {% elif d[6] == "req" and d[4]!="checkbox" and d[4]!="radio" %}
+            <input name="{{'ans'+(d[7])|string}}" type="{{d[4]}}" required>
+
+            {% elif d[4]!="checkbox" and d[4]!="radio" %}
+            <input name="{{'ans'+(d[7])|string}}" type="{{d[4]}}">
+
+            {% endif %}
+            {% if d[4]=="checkbox" or d[4]=="radio" %}
+            <input name="{{'ans'+(d[7])|string}}" type="{{d[4]}}" value="{{d[5]}}">
+            <label>{{d[5]}}</label>
+            {% endif %}
+            
+           </div>
+          </div>
+        {% endfor %}
+        </form>
+        <button type="submit" form="resform">submit response</button>
+        {% endif %}
+    </body>
+
+    <script>
+     function checkform(){
+         var form=document.forms.resform;
+         var inputs = document.getElementsByTagName('input');
+         console.log(inputs);
+         var c=0,r=0;
+         for(var i = 0; i < inputs.length; i++) {
+           c=0;r=0;
+           if(inputs[i].type == "radio"){
+               cur_name="ans" + String(i+1);
+               var ra = document.getElementsByName(cur_name);
+               for(var j=0;j<ra.length;j++){
+                   console.log(ra.name);
+                   if(ra[j].checked) r++;
+               }
+               if(r==0) {
+                   alert("please select one radio option");
+                   return false;
+               }
+               i=i+j;
+           }
+
+           else if(inputs[i].type == "checkbox"){
+               cur_name="ans"+String(i+1);
+               var ch=document.getElementsByName(cur_name);
+               console.log(ch);
+               for(var j=0;j<ch.length;j++){
+                 console.log(cur_name);
+                 console.log(ch.name);
+                 if(ch[j].checked) {c++;}
+               }
+               if(c==0){
+                   alert("please select one checkbox");
+                   return false;
+               } 
+               i=i+j-1;  
+           }
+         }
+         
+         return true;
+     }
+    </script>
+
+</html>

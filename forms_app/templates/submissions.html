@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>submissions</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='submissions.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+    </head>
+
+      <body>
+      <header>
+        <div class="nav">
+          <a class="active" href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+          <a href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+          <a href="#"><i class="material-icons">search</i>Explore</a>
+          <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+      </div>
+      </header>
+      <h3>Responses for form {{formno}}</h3>
+      <table>
+        <tr>
+          <th>response number</th>
+          <th>question number</th>
+          <th>question</th>
+          <th>answer</th>
+        </tr>
+        {% set q= namespace (no=0) %}
+        {% for d in data %}
+          {% if d[4]=="image" or d[4]=="file" %}
+           <tr>
+              <td>{{ d[0] }}</td>
+              <td>{{ d[2] }}</td>
+              <td>{{ d[3] }}</td>
+              <td onclick="openfile(this,'{{d[4]}}')">{{ d[5] }}</td>
+            </tr>
+            
+          {% elif d[2] != q.no %}
+        <tr>
+          <td>{{ d[0] }}</td>
+          <td>{{ d[2] }}</td>
+          <td>{{ d[3] }}</td>
+          <td>{{ d[5] }}</td>
+        </tr>
+          {% elif d[2]== q.no %}
+          <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ d[5] }}</td>
+          </tr>
+          {% endif %}
+          {% set q.no=d[2] %}
+        {% endfor %}
+      </table>
+
+
+    <form action="{{url_for('display')}}" method="post" name="myform" id="myform">
+      <input type="text" name="f_path" readonly>
+    </form>
+    <img src="">
+    </body>
+    <script>    
+
+  function func1(){
+    document.getElementsByTagName("img")[0].src="";
+    document.getElementsByTagName("button")[0].remove();
+  }
+  function openfile(c,t){
+    console.log(c.innerHTML);
+    var form=document.forms.myform;
+    form.f_path.value=c.innerHTML;
+    var str=c.innerHTML;
+    if(t=="image"){
+    arr=str.split("/");
+    document.getElementsByTagName("img")[0].src="../static/files/"+arr[arr.length-1];
+    var but=document.createElement("BUTTON");
+    but.addEventListener('click',function(){
+      func1();
+    });
+    but.innerHTML="clear";
+    but.type="button";
+    document.getElementsByTagName('body')[0].appendChild(but);
+    }
+    else{
+      form.submit();
+    }
+  }
+  var myCanvas;
+  var ctx ;
+ 
+function drawLine(ctx, startX, startY, endX, endY,color){
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(endX,endY);
+    ctx.stroke();
+    ctx.restore();
+}
+ 
+function drawBar(ctx, upperLeftCornerX, upperLeftCornerY, width, height,color){
+    ctx.save();
+    ctx.fillStyle=color;
+    ctx.fillRect(upperLeftCornerX,upperLeftCornerY,width,height);
+    ctx.restore();
+}
+
+var answers= {};
+var colors=["purple","red","orange","yellow","teal","green","gray"];
+var colors1=["lime","orange","red","green","teal","purple","gray"];
+
+
+ 
+var Barchart = function(options){
+    this.options = options;
+    this.canvas = options.canvas;
+    this.ctx = this.canvas.getContext("2d");
+    this.colors = options.colors;
+    this.i=options.ind;
+
+    this.draw = function(){
+        var maxValue = 0;
+        for (var categ in this.options.data){
+            maxValue = Math.max(maxValue,this.options.data[categ]);
+        }
+        var canvasActualHeight = this.canvas.height - this.options.padding * 2;
+        var canvasActualWidth = this.canvas.width - this.options.padding * 2;
+ 
+        //drawing the grid lines
+        var gridValue = 0;
+        while (gridValue <= maxValue){
+            var gridY = canvasActualHeight * (1 - gridValue/maxValue) + this.options.padding;
+            drawLine(
+                this.ctx,
+                0,
+                gridY,
+                this.canvas.width,
+                gridY,
+                this.options.gridColor
+            );
+             
+            //writing grid markers
+            this.ctx.save();
+            this.ctx.fillStyle = this.options.gridColor;
+            this.ctx.textBaseline="bottom"; 
+            this.ctx.font = "bold 10px Arial";
+            this.ctx.fillText(gridValue, 10,gridY - 2);
+            this.ctx.restore();
+ 
+            gridValue+=this.options.gridScale;
+        }      
+  
+        //drawing the bars
+        var barIndex = 0;
+        var numberOfBars = Object.keys(this.options.data).length;
+        var barSize = (canvasActualWidth)/numberOfBars;
+ 
+        for (categ in this.options.data){
+            var val = this.options.data[categ];
+            var barHeight = Math.round( canvasActualHeight * val/maxValue) ;
+            drawBar(
+                this.ctx,
+                this.options.padding + barIndex * barSize,
+                this.canvas.height - barHeight - this.options.padding,
+                barSize,
+                barHeight,
+                this.colors[barIndex%this.colors.length]
+            );
+ 
+            barIndex++;
+        }
+ 
+        //drawing series name
+        this.ctx.save();
+        this.ctx.textBaseline="bottom";
+        this.ctx.textAlign="center";
+        this.ctx.fillStyle = "#000000";
+        this.ctx.font = "bold 14px Arial";
+        this.ctx.fillText(this.options.seriesName, this.canvas.width/2,this.canvas.height);
+        this.ctx.restore();  
+         
+        //draw legend
+        barIndex = 0;
+        var legend = document.getElementsByTagName("legend")[this.i];
+        var ul = document.createElement("ul");
+        legend.append(ul);
+        for (categ in this.options.data){
+            var li = document.createElement("li");
+            li.style.listStyle = "none";
+            li.style.borderLeft = "20px solid "+this.colors[barIndex%this.colors.length];
+            li.style.padding = "5px";
+            li.textContent = categ;
+            ul.append(li);
+            barIndex++;
+        }
+    }
+}
+
+function drawArc(x,y,radius,start_ang,end_ang,color){
+        ctx.save();
+        console.log(color);
+        ctx.fillStyle=color;
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.arc(x,y,radius,start_ang,end_ang);
+        ctx.lineTo(x,y);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
+    }
+
+    function piechart(x,y,radius,data,colors,ind){
+        
+        this.x=x;
+        this.y=y;
+        this.radius=radius;
+        this.data=data;
+        this.colors=colors;
+        this.ind=ind;
+
+        var tot=0;
+
+        this.total=function(){
+            for(var key in this.data){
+               tot=tot+ Number(this.data[key]); 
+            }
+        }
+
+        this.draw=function(){
+            this.total();
+            var sa=0;
+            var ea;
+            var i=0;
+
+            for(var key in this.data){
+                ang=2 * Math.PI * (this.data[key] / tot);
+                drawArc(this.x,this.y,this.radius,sa,sa+ang,colors[i]);
+                i++;
+                sa=sa+ang;
+            }
+
+            barIndex = 0;
+            var legend = document.getElementsByTagName("legend")[this.ind];
+            var ul = document.createElement("ul");
+            legend.append(ul);
+            for (var categ in this.data){
+                var li = document.createElement("li");
+                li.style.listStyle = "none";
+                li.style.borderLeft = "20px solid "+this.colors[barIndex%this.colors.length];
+                li.style.padding = "5px";
+                li.textContent = categ;
+                ul.append(li);
+                barIndex++;
+            }
+        }
+      } 
+
+var k=0,c=0;
+{% for key in cq %}
+ {% for j in cq[key] %}
+    answers.{{j}}={{cq[key][j]}};
+ {% endfor %}
+  for( var key in answers){
+    if(answers[key]) { c++;}
+  }
+
+  if(c!=0){
+   myCanvas=document.createElement("CANVAS");
+   myCanvas.setAttribute("width",300);
+   myCanvas.setAttribute("height",300);
+   myCanvas.style.border="1px solid black";
+   ctx=myCanvas.getContext('2d');
+   document.getElementsByTagName("body")[0].appendChild(myCanvas);
+   var legend=document.createElement("LEGEND");
+   document.getElementsByTagName("body")[0].appendChild(legend);
+   var myBarchart = new Barchart(
+    {
+        canvas:myCanvas,
+        seriesName:"question",
+        padding:20,
+        gridScale:5,
+        gridColor:"#eeeeee",
+        data:answers,
+        colors:colors1,
+        ind:k
+    }
+   );
+   myBarchart.draw();
+   k++;
+  }
+  else{
+    c=0;
+  }
+ {% endfor %}
+
+
+ var c=0;
+{% for key in rq %}
+ {% for j in rq[key] %}
+    answers.{{j}}={{rq[key][j]}};
+ {% endfor %}
+  for( var key in answers){
+    if(answers[key]) { console.log("hh");c++;}
+  }
+
+  if(c!=0){
+    console.log("in");
+   myCanvas=document.createElement("CANVAS");
+   myCanvas.setAttribute("width",300);
+   myCanvas.setAttribute("height",300);
+   myCanvas.style.border="1px solid black";
+   ctx=myCanvas.getContext('2d');
+   document.getElementsByTagName("body")[0].appendChild(myCanvas);
+   var legend=document.createElement("LEGEND");
+   document.getElementsByTagName("body")[0].appendChild(legend);
+
+   var mypiechart=new piechart(150,150,100,answers,colors,k);
+   mypiechart.draw();
+   k++;
+  }
+  else{
+    c=0;
+  }
+ {% endfor %}
+
+
+
+
+    
+    </script>
+</html>

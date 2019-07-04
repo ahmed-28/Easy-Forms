@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>view page</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='view.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+    </head>
+    <body>
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3"></script>
+       <header>
+          <div class="nav">
+            <a class="active" href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+            <a href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+            <a href="{{url_for('explore')}}"><i class="material-icons">search</i>Explore</a>
+            <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+          </div>
+        </header> 
+        <p>URL for the form:</p><span><i>localhost:5000/response/{{user}}/{{formno}}</i></span>       
+        <div id="heading">
+          <label>Title:</label><p>{{data[0][0]}}</p>
+          <label>Description:</label><p>{{data[0][1]}}</p>
+        </div>
+        {% set co = namespace(a=0,r=0)%}
+        {% set q= namespace(no=0) %}
+        <form>
+       
+        {% for d in data %}
+          <div class="field" onclick="makethisactive(this)">
+           {% if d[7] != q.no %}
+           <div>
+           <p>{{d[3]}}</p>
+           </div>
+           {% endif %}
+           <div>
+            {% set q.no=d[7] %}
+            {% if d[4]=="image" %}
+            <input name="{{'ans'+(d[7])|string}}" type="file" accept="image/*" required>
+
+            {% elif d[4]=="file" %}
+            <input name="{{'ans'+(d[7])|string}}" type="file" accept=".doc, .docx, .pdf , .txt , .ppt , .otd , .wps , audio/* , video/*" required>
+
+            {% elif d[6] == "req" and d[4]!="checkbox" and d[4]!="radio" %}
+            <input name="{{'ans'+(d[7])|string}}" type="{{d[4]}}" required>
+            
+            {% else %}
+            <input name="{{'ans'+(d[7])|string}}" type="{{d[4]}}">
+            {% endif %}
+            {% if d[4]=="checkbox" or d[4]=="radio" %}
+            <label>{{d[5]}}</label>
+            {% endif %}
+            
+           </div>
+          </div>
+        {% endfor %}
+         
+        </form>
+
+        <div id="share" class="fb-share-button" data-href="http://localhost:5000/response/{{user}}/{{formno}}" data-layout="button_count" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A5000%2Fresponse%2Fbanu%2F26&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fa fa-facebook-official" style="font-size:36px"></i></a></div>
+    </body>
+
+</html>

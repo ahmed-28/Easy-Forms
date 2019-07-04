@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>create from</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='createform.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+    </head>
+
+    <body>
+        <header>
+        <div class="nav">
+         <a href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+         <a class="active" href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+         <a href="#"><i class="material-icons">search</i>Explore</a>
+         <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+        </div>
+        </header>
+  <form action="" method="post" name="form1" id="form1" enctype="multipart/form-data">
+      
+      <div>
+          <label>Title:</label><input type="text" name="title" required>
+        </div>
+        <div>
+          <label>Description:</label><input type="text" name="des" required>
+        </div>
+        <div>
+          <label>Deadline(opt):</label><input type="date" name="deadline">   
+      </div>
+      <div>
+         <label>Submissions/user(opt):</label><input type="number" name="subusr" onchange="addname(this)">
+      </div>
+      <hr>
+     <div class="field" onclick="makethisactive(this)" onmouseover="myfunc(this)" onmouseout="myfunc1(this)">
+      <div>
+          <input type="text" value="question" name="ques[]">
+          <select name="ans[]" id="ans1" onchange="setanstype(this)">
+              <option selected>text</option>
+              <option>number</option>
+              <option>checkbox</option>
+              <option>radio</option>
+              <option>date</option>
+              <option>image</option>
+              <option>file</option>
+          </select>
+        </div>
+      <div>
+          <input name="anstype[]" type="text" readonly>
+      </div>
+      <input type="button" class="req" onclick="setrequire(this)" value="not req" style="background-color: red">
+      <input type="text" value="not req" name="req[]" class="rq" readonly>
+      <button  type="button" class="delete" onclick="delfield(this)"><i class="material-icons">delete</i></button>
+    </div>
+  </form>
+  <button type="button" id="add" onclick="addfield()"><i class="material-icons" style="font-size:30px;">add_circle</i></button>
+  <button type="submit" form="form1" id="create">Create</button>
+  </body>
+
+  <script>
+    var form=document.forms.form1;
+    
+    var curanstype=[];
+    var values = [];
+
+    var cur_field;
+    var fields=0;
+
+    var f=document.getElementsByClassName("field");
+    cur_field=f[fields];
+    curanstype=cur_field.getElementsByTagName('input');
+    
+    function addname(s){
+      if(f[0]==undefined || s.value && f[0].id!="limit"){
+        
+        //console.log(first_field);
+        
+        var divi=document.createElement("DIV");
+        divi.setAttribute("class","field");
+        divi.setAttribute("id" , "limit");
+        var hr=document.createElement("HR");
+        divi.appendChild(hr);
+        divi.addEventListener('click',function(){ makethisactive(divi);});
+        divi.addEventListener('mouseover',function(){
+          myfunc(divi);
+        });
+        divi.addEventListener('mouseout',function(){
+          myfunc1(divi);
+        });
+        divi.innerHTML=`{% include 'limitsub.html' %}`;
+        if(f[0]==undefined){
+          form.appendChild(divi);
+        }
+        else{
+          first_field=f[0];
+          form.insertBefore(divi,first_field);
+        }
+      }
+      else if(!s.value){
+        f[0].remove();
+      }
+    }
+
+    function makethisactive(d){
+      console.log("clicked");
+      curanstype=d.getElementsByTagName('input');
+      cur_field=d;
+      curanstype.name="ans"+(fields+1);
+      console.log(curanstype.name);
+      cur_field.style.boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
+
+    }
+
+    function setvalue_forcheckbox(n){
+      var pc=n.previousSibling;
+      pc.value=n.value;
+    }
+  
+    function addcheckbox(){
+      var tempdiv=document.createElement("DIV");
+      var inp=document.createElement("INPUT");
+      inp.name="anstype[]";
+      inp.type="checkbox";
+      var op=document.createElement("INPUT");
+      op.type="text";
+      op.value="option";
+      op.name="op[]";
+      op.class="opt";
+
+      inp.value=op.value;
+      op.addEventListener('change',function(){
+                                setvalue_forcheckbox(op);});
+      tempdiv.appendChild(inp);
+      tempdiv.appendChild(op); 
+      node=cur_field.getElementsByClassName("addo")[0];
+      cur_field.insertBefore(tempdiv,node);
+      var nt=cur_field.getElementsByClassName("noofop")[0];
+      var v=nt.value;
+      nt.value=String(1+Number(v));
+    }
+    
+    
+    function addradio(){
+      var tempdiv=document.createElement("DIV");
+      var inp=document.createElement("INPUT");
+      inp.name="anstype[]";
+      inp.type="radio";
+      var op=document.createElement("INPUT");
+      op.type="text";
+      op.value="option";
+      op.name="op[]";
+      inp.value=op.value;
+      op.addEventListener('change',function(){
+                                setvalue_forcheckbox(op);});
+      tempdiv.appendChild(inp);
+      tempdiv.appendChild(op); 
+      node=cur_field.getElementsByClassName("addop")[0];
+      cur_field.insertBefore(tempdiv,node);
+      var nt=cur_field.getElementsByClassName("noofop")[0];
+      var v=nt.value;
+      nt.value=String(1+Number(v))
+    }
+    function setanstype(s){
+      var sel = s.options[s.selectedIndex].text;
+      curanstype[1].type=sel;
+      if(sel=="checkbox"){
+        cur_field.innerHTML=`{% include 'checkbox.html' %}`;
+      }
+      else if(sel=="text"){
+        cur_field.innerHTML=`{% include 'text.html' %}`;
+        
+      }
+      else if(sel=="number"){
+        cur_field.innerHTML=`{% include 'number.html' %}`;
+      }
+      else if(sel=="radio"){
+        cur_field.innerHTML=`{% include 'radio.html' %}`;
+      }
+      else if(sel=="date"){
+        cur_field.innerHTML=`{% include 'date.html' %}`;
+      }
+      else if(sel=="image"){
+        cur_field.innerHTML=`{% include 'image.html' %}`;
+      }
+
+      else if(sel=="file"){
+        cur_field.innerHTML=`{% include 'file.html' %}`
+      }
+    }
+
+    function setrequire(b){
+        console.log("in");
+        console.log(b.style.backgroundColor);
+        if(b.style.backgroundColor =="green"){
+          console.log("y");
+          b.style.backgroundColor="red";
+          b.value="not req"; 
+          cur_field.getElementsByClassName("rq")[0].value="not req";
+          curanstype[1].required=false;
+        }
+        else{
+          b.style.backgroundColor="green";
+          b.value="req";
+          console.log("f");
+          cur_field.getElementsByClassName("rq")[0].value="req";
+          curanstype[1].required=true;    
+        }
+    }
+
+    function change_active_field(){
+      f=document.getElementsByClassName("field");
+      cur_field=f[fields];
+      curanstype=cur_field.getElementsByTagName('input');
+      curanstype.name="ans"+(fields)
+    }
+
+    function addfield(){
+        fields++;
+        console.log(fields);
+        var div1=document.createElement("DIV");
+        div1.setAttribute("class","field");
+        var hr=document.createElement("HR");
+        div1.appendChild(hr);
+        div1.addEventListener('click',function(){ makethisactive(div1);});
+        div1.addEventListener('mouseover',function(){
+          myfunc(div1);
+        });
+        div1.addEventListener('mouseout',function(){
+          myfunc1(div1);
+        });
+        div1.innerHTML=`{% include 'text.html' %}`;
+        form.appendChild(div1);
+        change_active_field();
+    }
+
+    function delfield(d){
+      d.parentNode.remove();
+    }
+
+    function myfunc(di){
+      di.style.boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
+    }
+
+    function myfunc1(di){
+      di.style.boxShadow="";
+    }
+
+
+  </script>
+</html>

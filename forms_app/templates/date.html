@@ -1,0 +1,17 @@
+<hr>
+<div>
+    <input type="text" value="question" name="ques[]">
+    <select name="ans[]" id="ans1" onchange="setanstype(this)">
+        <option>text</option>
+        <option>number</option>
+        <option>checkbox</option>
+        <option>radio</option>
+        <option selected>date</option>
+    </select>
+  </div>
+<div>
+    <input name="anstype[]" type="date" readonly>
+</div>
+<input type="button" class="req" onclick="setrequire(this)" value="not req" style="background-color: red">
+<input type="text" value="not req" name="req[]" class="rq" readonly>
+<button  type="button" class="delete" onclick="delfield(this)"><i class="material-icons">delete</i></button>

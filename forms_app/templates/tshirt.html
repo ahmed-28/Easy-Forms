@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>T-shirt template</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='view.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+    </head>
+
+    <body>
+        <header>
+            <div class="nav">
+                <a class="active" href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+                <a href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+                <a href="{{url_for('explore')}}"><i class="material-icons">search</i>Explore</a>
+                <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+            </div>
+        </header> 
+        <div id="heading">
+            <label>Title:</label><p>T-SHIRT registration</p>
+            <label>Description:</label><p>Form for collecting the number of and sizes of t-shirt required</p>
+        </div>
+        <form name="form1" id="form1" method="post" action="">
+         <div>
+             <label>Deadline(opt):</label><input type="date" name="deadline">   
+         </div>
+         <div>
+            <label>Submissions/user(opt):</label><input type="number" name="subusr" onchange="addname(this)">
+          </div>
+          <div>
+            <p>Name:</p>
+            <input type="text" name="ans1" req>
+          </div>
+          <div>
+              <p>Email:</p>
+              <input type="email" name="ans2" req>
+          </div>
+          <div>
+              <p>T-shirt size:</p>
+              <input type="radio" name="ans3" value="S"><label>S</label>
+              <input type="radio" name="ans3" value="M"><label>M</label>
+              <input type="radio" name="ans3" value="L"><label>L</label>
+          </div>
+          <div>
+              <p>Comments:</p>
+              <input type="text" name="ans4">
+          </div>
+        </form>
+        <button type="submit" form="form1" id="create">Create</button>
+    </body>
+</html>

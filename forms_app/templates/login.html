@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>login user</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='register.css')}}">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+    </head>
+
+    <body>
+      <header>
+        <h1>Sibi Forms</h1>
+      </header>
+        <div class="nav">
+            <a class="active" href="{{url_for('login')}}">Sign in</a>
+            <a href="{{url_for('signup')}}">Sign up</a>
+        </div>
+        <form action="" method="post">
+            <div>
+             <input type="text" required value="username" name="user">
+            </div>
+            <div>
+                <input type="text" required value="password" name="pass" oninput="myfunc(this)">
+            </div>
+            <div class="button">
+               <button type="submit">Sign in</button>
+            </div>
+        </form>
+        {% if msg %}
+        <p>{{msg}}</p>
+        {% endif %}
+    </body>
+    <script>
+        function myfunc(inp){
+            inp.setAttribute("type","password");
+        }
+    </script>
+
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>>
+<html>
+    <head>
+        <title>authentication</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='authentication.css')}}">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+    </head>
+
+    <body>
+        <h3> Authentication Required..</h3>
+        <form action="" method="post" name="myform" id="myform">
+            <div>
+                <label>enter username:</label><input type="text" required name="user">
+            </div>
+            <div>
+                <label>enter password:</label><input type="password" required name="pass">
+           </div>
+        </form>
+        <button type="submit" form="myform">submit</button>
+        {% if msg %}
+        <p>{{msg}}</p>
+        {% endif %}
+    </body>
+</html>

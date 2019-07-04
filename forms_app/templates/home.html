@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>home</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{url_for('static',filename='home.css')}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
+    </head>
+
+    <body>
+        <header>
+        <div class="nav">
+         <a class="active" href="{{url_for('home')}}"><i class="material-icons">home</i>Home</a>
+         <a href="{{url_for('createform')}}"><i class="material-icons">add</i>Create form</a>
+         <a href="{{url_for('explore')}}"><i class="material-icons">search</i>Explore</a>
+         <a href="{{url_for('logout')}}"><i class="material-icons">person</i>Logout</a>
+        </div>
+        </header>
+        <p>Welcome , {{user}}</p>
+        {% if noti %}
+        {% for n in noti %}
+        <div onclick="remdiv(this);" style="text-align:center;">{{n}}</div>
+        {% endfor %}
+        <h3>Custom Templates For You</h3>
+        {% endif %}
+        <div class="temp">
+           <div class="fbox">
+                <div class="forms"><i class="material-icons">add</i></div>
+                <a href="{{ url_for('createform') }}"><button>new form</button></a>
+            </div>
+          <div class="fbox">
+              <div class="forms"><div class="content">contact inforamtion</div></div>
+              <a href="{{ url_for('contactinfo') }} "><button>view</button></a>
+          </div>
+          <div class="fbox">
+            <div class="forms"><div class="content">T-Shirt registration</div></div>
+            <a href="{{ url_for('tshirt') }} "><button>view</button></a>
+         </div>
+        
+        </div>
+        {% if nf %}
+
+        <h3>Your Forms</h3>
+        {% for i in range(nf) %}
+        <div class="fbox">
+          <div class="forms"><div class="content">{{ data[i][1] }} - form {{i + 1}}</div></div>
+          <a href="{{ url_for('view' , formno=i+1) }} "><button>view</button></a>
+          <a href="{{ url_for('authenticate',formno=i+1) }}"><button>summary</button></a>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <p>no forms to display</p>
+        <p>create your form now!</p>
+        {% endif %}
+         <p id="txtHint"></p>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    colors=["#8198A6","#BFB38E","#D9985F","#BF7950","#D97B59"];
+    var f=document.getElementsByClassName('forms');
+    for(var i=0;i<f.length;i++){
+        var ri=Math.floor(Math.random()*5);
+        f[i].style.backgroundColor=colors[ri];
+    }
+    var nf=document.getElementsByClassName('fbox').length-3;
+    function remdiv(d){
+        d.remove();
+    }
+    /*var lr=[];
+    $(document).ready(function() {
+            setInterval(function() {
+              $.ajax({
+                 data : {
+                    'nforms' : nf,
+                    're':lr,
+                        },
+                    type : 'POST',
+                    url : '/noti'
+                   })
+               .done(function(data) {
+                 $('#parent').text(data.msg).show();
+                 lr=data.output;
+                 console.log(data.output);
+                 if(data.msg){
+                $('<div id="output" onclick="remdiv(this)">'+String(data.msg)+'</div>').prependTo($('#parent'));}
+             });
+             event.preventDefault();
+             },1000);
+       });*/
+
+
+            
+</script>
+</html>

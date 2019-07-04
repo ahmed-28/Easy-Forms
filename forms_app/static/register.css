@@ -1,0 +1,100 @@
+body{
+    background-image: url("bg1.jpeg");
+    background-size: cover;
+    font-family: 'Acme';
+}
+
+form {
+    margin: 0 auto;
+    width: 350px;
+    padding: 1em;
+    border: 1px solid black; 
+    top:50px;
+    position: relative;
+  }
+  
+  form div{
+    margin-top:40px;
+    text-align: center;
+  }
+  
+  input{
+    font: 1em sans-serif;
+    width: 300px;
+    box-sizing: border-box; 
+    border-width: 0; 
+    border-bottom-width: 1px;
+    border-bottom: 1px solid gray;
+    background-color: rgba(0,0,0, 0);
+  }
+  
+  input:focus {
+      border-bottom-color: #000;
+  }
+  
+  .button{
+    text-align: center;
+    padding: 20px;
+  }
+
+  button{
+    font-size: 20px;
+    width: 100px;
+    border: none;
+    text-align: center;
+    border-radius: 30px;
+  }
+
+  .nav{
+    background-color: gray;
+    padding:0px;
+    top: 40px;
+    margin:auto;
+    position: relative;
+    width: 385px;
+    height: 50px;
+    overflow: hidden;
+  }
+
+  a{
+      
+      text-align: center;
+      padding-top: 10px;
+      width: 50%;
+      float: left;
+      color: #f2f2f2;
+      font-size: 20px;
+      text-decoration: none;
+      height: 40px;
+  }
+
+  .nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  header{
+      padding:20px;
+      color: #222226;
+      font-size: 30px;
+  }
+
+  .active{
+    background-color:black;
+  }
+
+  p{
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      top:30px;
+      font-size: 20px;
+  }
+
+  #output{
+    float: right;
+    position: relative;
+    bottom: 220px;
+    right:  240px;
+    font-size: 17px;
+  }
