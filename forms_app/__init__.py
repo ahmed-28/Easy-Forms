@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 
 
 app=Flask(__name__)
-app.config['MYSQL_DATABASE_USER'] = 'ahmed'
+app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['MYSQL_DATABASE_DB'] = 'sibi_forms'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
