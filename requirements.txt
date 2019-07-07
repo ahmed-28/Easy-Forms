@@ -1,6 +1,23 @@
-python3
-flask (can be installed by command pip install flask)
-mysql-connector for python (pip install mysql-connector) * optional only if you want to create required tables using python script
-flaskext.mysql ( pip install flaskext.mysql)
-python3 passlib (pip install passlib)
-werkzeug (installed automatically with flask installation)
+configparser==3.5.0b2
+entrypoints==0.3
+Flask==1.0.3
+Flask-MySQL==1.4.0
+Flask-MySQLdb==0.2.0
+Jinja2==2.10.1
+keyring==17.1.1
+keyrings.alt==3.1.1
+MarkupSafe==1.1.1
+mysql-connector==2.2.9
+mysqlclient==1.4.2.post1
+olefile==0.46
+passlib==1.7.1
+PyGObject==3.32.0
+PyMySQL==0.9.3
+pyparsing==2.4.0
+python-dateutil==2.8.0
+python-engineio==3.8.2
+pytz==2019.1
+requests==2.22.0
+SecretStorage==2.3.1
+urllib3==1.25.3
+Werkzeug==0.15.4
