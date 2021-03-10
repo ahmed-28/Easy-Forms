@@ -1,6 +1,6 @@
-# webdev_delta_task3
+# Easy Forms
 
-this is google form like website
+This is a simple form builder which allows you to create forms easily
 
 setup:
 1.clone the repo to your local desktop
