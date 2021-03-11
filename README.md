@@ -14,10 +14,11 @@ run the create_userdb.py script to create the necessary database and table
 4.open the terminal .cd into this webdev_delta_task3 directory
 
 5.type the following commands
-  
+
+```
   export FLASK_APP=forms_app.py
   flask run
-  
+```
  
  Now the website will be running in localhost:5000
  
